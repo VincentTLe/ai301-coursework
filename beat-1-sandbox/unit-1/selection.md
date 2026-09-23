@@ -15,7 +15,7 @@ wrong label is not graded.
 
 **Issue link**
 
-<<ISSUE_LINK>>
+https://github.com/codepath/pathreview-ai301-fa26-s3/issues/69
 
 **Verdict output**
 
@@ -25,9 +25,83 @@ Live-mode output of my installed skill, run as:
 claude -p "issue-select: grade these candidate first issues: https://github.com/codepath/pathreview-ai301-fa26-s3/issues/69 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/61 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/68"
 ```
 
+````text
+All evidence is gathered, so here is the grading. Reference date is today, 2026-09-23.
+
+**All three candidates are accepted.** Every required check passes on each one, and the three tie on preferred checks (two of three each), so the fit profile decides the order.
+
+**Ranked (accepted):**
+
+1. **#69 Output parser crashes on a top-level JSON array fallback.** Best fit: the work is LLM output parsing and data validation in a Python service, plus removing an xfail test marker. Those are the profile's most specifically named interests. Two classmates have commented claiming it. The house rule says that does not block it.
+2. **#61 Health check DB probe passes a raw SQL string.** Strong fit: an API endpoint plus a SQLAlchemy query, both named in the profile. It is also the smallest change of the three, essentially wrapping one string in `text()`. No comments, no claims.
+3. **#68 Keyword search raises ZeroDivisionError when the index is empty.** Good fit as Python backend and data handling, but it is BM25 retriever logic rather than any of the profile's specifically listed areas. One classmate claim comment, which the house rule ignores.
+
+**Shared repo facts behind the grades:**
+
+| Fact | Value |
+|---|---|
+| Archived | no |
+| Last push | 2026-09-16, 7 days ago |
+| Newest default-branch commit | 2026-09-16 by Aburke225 (human, COLLABORATOR) |
+| PRs in repo, any state | 0 |
+| Contribution policy | docs/CONTRIBUTING.md exists, no statement on AI |
+| Maintainer first-response sample | 10 issues, 0 maintainer comments |
+
+**Two notes on the rubric, not on the issues.** First, the claim comments on #69 and #68 would fail `no-active-claim` as the rubric is written, since they are within 90 days with no maintainer reply. They pass only because the scope's Path Review house rule says classmates' claims do not count. Second, `maintainer-responsive` fails on all three, but every sampled issue was opened by the maintainer themselves in a seeded tracker, so "first maintainer response" is structurally absent rather than evidence of an absent maintainer. The check is preferred, so it changes nothing here.
+
+```json
+[
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s3/issues/69",
+    "checks": [
+      {"name": "repo-alive", "grade": "pass", "evidence": "archived: false; last push 2026-09-16T21:50:20Z, 7 days before reference date 2026-09-23"},
+      {"name": "maintainer-active", "grade": "pass", "evidence": "Newest of last 5 main commits is 2026-09-16 by Aburke225 (human COLLABORATOR), 7 days old; all five authored by the same human"},
+      {"name": "not-assigned", "grade": "pass", "evidence": "assignees: none"},
+      {"name": "no-open-pr", "grade": "pass", "evidence": "No linked PRs in timeline; repo has 0 PRs in any state; no comment links a PR"},
+      {"name": "no-active-claim", "grade": "pass", "evidence": "Two student claim comments (Yina-Mu 2026-09-20, tonybuii2003 2026-09-21, both author_association NONE); scope.md house rule: classmates' claim comments do not block a Path Review issue"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "Bug opened by maintainer Aburke225 [COLLABORATOR]: one AttributeError on list.items() in output_parser.py, two files named, xfail marker H-02 to remove; not umbrella, not a question, no closed PRs"},
+      {"name": "ai-policy-ok", "grade": "pass", "evidence": "docs/CONTRIBUTING.md and PR template contain no statement on AI; no AI_POLICY.md or AGENTS.md"},
+      {"name": "newcomer-label", "grade": "pass", "evidence": "labels: bug, good first issue, rag, tier-1"},
+      {"name": "maintainer-responsive", "grade": "fail", "evidence": "Sample of 10 recently updated issues: none received any maintainer comment (all opened by the maintainer, 0 comments from OWNER/MEMBER/COLLABORATOR)"},
+      {"name": "starting-point", "grade": "pass", "evidence": "Body names rag/generator/output_parser.py and tests/unit/test_output_parser.py; comment names test_json_array_fallback"}
+    ],
+    "verdict": "accept"
+  },
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s3/issues/61",
+    "checks": [
+      {"name": "repo-alive", "grade": "pass", "evidence": "archived: false; last push 2026-09-16T21:50:20Z, 7 days before reference date 2026-09-23"},
+      {"name": "maintainer-active", "grade": "pass", "evidence": "Newest of last 5 main commits is 2026-09-16 by Aburke225 (human COLLABORATOR), 7 days old; all five authored by the same human"},
+      {"name": "not-assigned", "grade": "pass", "evidence": "assignees: none"},
+      {"name": "no-open-pr", "grade": "pass", "evidence": "No linked PRs in timeline; repo has 0 PRs in any state; no comments on the issue"},
+      {"name": "no-active-claim", "grade": "pass", "evidence": "Comment thread is empty (comments: 0)"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "Bug opened by maintainer Aburke225 [COLLABORATOR]: raw 'SELECT 1' in api/routes/health.py needs sqlalchemy.text(); repro via GET /health given; single file, single change"},
+      {"name": "ai-policy-ok", "grade": "pass", "evidence": "docs/CONTRIBUTING.md and PR template contain no statement on AI; no AI_POLICY.md or AGENTS.md"},
+      {"name": "newcomer-label", "grade": "pass", "evidence": "labels: bug, good first issue, api, tier-1"},
+      {"name": "maintainer-responsive", "grade": "fail", "evidence": "Sample of 10 recently updated issues: none received any maintainer comment (all opened by the maintainer, 0 comments from OWNER/MEMBER/COLLABORATOR)"},
+      {"name": "starting-point", "grade": "pass", "evidence": "Body names api/routes/health.py, the GET /health route, and the exact ArgumentError text"}
+    ],
+    "verdict": "accept"
+  },
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s3/issues/68",
+    "checks": [
+      {"name": "repo-alive", "grade": "pass", "evidence": "archived: false; last push 2026-09-16T21:50:20Z, 7 days before reference date 2026-09-23"},
+      {"name": "maintainer-active", "grade": "pass", "evidence": "Newest of last 5 main commits is 2026-09-16 by Aburke225 (human COLLABORATOR), 7 days old; all five authored by the same human"},
+      {"name": "not-assigned", "grade": "pass", "evidence": "assignees: none"},
+      {"name": "no-open-pr", "grade": "pass", "evidence": "No linked PRs in timeline; repo has 0 PRs in any state; no comment links a PR"},
+      {"name": "no-active-claim", "grade": "pass", "evidence": "One student claim comment (acordero4852 2026-09-19, author_association NONE); scope.md house rule: classmates' claim comments do not block a Path Review issue"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "Bug opened by maintainer Aburke225 [COLLABORATOR]: KeywordSearcher.index([]) raises ZeroDivisionError in BM25Okapi, two files named, xfail marker H-01 to remove; not umbrella, not a question, no closed PRs"},
+      {"name": "ai-policy-ok", "grade": "pass", "evidence": "docs/CONTRIBUTING.md and PR template contain no statement on AI; no AI_POLICY.md or AGENTS.md"},
+      {"name": "newcomer-label", "grade": "pass", "evidence": "labels: bug, good first issue, rag, tier-1"},
+      {"name": "maintainer-responsive", "grade": "fail", "evidence": "Sample of 10 recently updated issues: none received any maintainer comment (all opened by the maintainer, 0 comments from OWNER/MEMBER/COLLABORATOR)"},
+      {"name": "starting-point", "grade": "pass", "evidence": "Body names rag/retriever/keyword_search.py, tests/unit/test_keyword_search.py, KeywordSearcher.index(), and BM25Okapi"}
+    ],
+    "verdict": "accept"
+  }
+]
 ```
-<<LIVE_OUTPUT>>
-```
+````
 
 ---
 
