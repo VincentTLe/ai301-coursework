@@ -25,7 +25,6 @@ Live-mode output of my installed skill, run as:
 claude -p "issue-select: grade these candidate first issues: https://github.com/codepath/pathreview-ai301-fa26-s3/issues/69 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/61 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/68"
 ```
 
-````text
 All evidence is gathered, so here is the grading. Reference date is today, 2026-09-23.
 
 **All three candidates are accepted.** Every required check passes on each one, and the three tie on preferred checks (two of three each), so the fit profile decides the order.
@@ -101,7 +100,6 @@ All evidence is gathered, so here is the grading. Reference date is today, 2026-
   }
 ]
 ```
-````
 
 ---
 
