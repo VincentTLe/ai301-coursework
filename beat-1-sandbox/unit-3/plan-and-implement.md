@@ -39,7 +39,7 @@ Mine is the plainest per-item version and reads no fields from inside items. If 
 
 **Open questions.** `review_generator.generate_section` keeps only `sections[0]`, so a multi-item array keeps only its first item there. #98's route keeps the whole text instead. A multi-key object already behaves the same way, so I kept them consistent. The `item_N` names and leaving objects inside arrays as JSON strings are also my choices. I'm happy to change any of these.
 
-I used Claude Code to help read the code, draft this plan, and run the test commands in my terminal. I reviewed the diff and the output before posting.
+I used Claude Code to help read the code and draft this plan; I ran every test command myself.
 
 ---
 
