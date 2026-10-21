@@ -9,8 +9,7 @@ files and no evidence uploads are part of Assignment 5.
 
 **Contribution Number:** [1]
 **Student:** [Student name]
-**GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comments upstream are identified by this name.]
+**GitHub Username:** VincentTLe
 **Issue:** [GitHub issue link]
 **Pull Request:** [GitHub PR link, once opened]
 
@@ -55,10 +54,17 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-**Unit 5: [one line on the tool work]**
+**Unit 5: built issue-scout; its first wild scan accepted 0 of 5, so the strategy and the rubric were patched**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+Built with Claude Code: issue-scout installed over my unit-1 skill, plus a search strategy of three `gh search issues`
+queries scoped to 18 Python LLM-tooling organizations, since a query across all of GitHub returned 100 results from
+4.5 hours of activity, with 29 of their 45 repos under 50 stars. The first scan graded 5
+issues and accepted none: 4 already had open linked PRs, and `maintainer-active` rejected docling-pipelines#343
+because five dependabot bumps filled its five-commit window, although humans had merged five commits in the previous
+24 hours. The fixes were `-linked:pr` in every query (it removes all four taken issues before grading), a live-mode
+look-back of up to 20 commits in `maintainer-active`, and whole-word matching in a hardware filter that had dropped
+issues for "npu" inside "input". Re-graded, #343 is accepted, and the four unit-1 eval bundles that test that check
+still match the gold labels (4/4).
 
 **Unit 6: [one line on the tool work]**
 
