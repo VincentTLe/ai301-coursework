@@ -88,10 +88,18 @@ the second run passed all four checks and my pr-precheck (10 of 10). One gap I c
 failed twice on `gh pr create` after both hooks had passed it, so #2024 was opened through the REST API with the same
 title and body, and that last call never went through the hook.
 
-**Unit 8: [one line on the tool work]**
+**Unit 8: installed the PR monitor, wrote my playbook from pyfixest's real response times, and merged `master` instead of the rebase it drafted**
 
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
+On 2026-11-09 the monitor, installed and run by Claude Code, read #2024 as BRANCH-STALE (no comment or review in 5
+days, and a conflict with `master` since 0.70.0 shipped the day before), so under my playbook (no nudge while the
+branch conflicts, 7 quiet days before a first nudge) it drafted a rebase plan and no comment.
+The draft fell short in three places: it guessed which files conflicted (only `docs/changelog.qmd` did, because my
+entry sat under the now-released 0.70.0), it worried about #2014, which is still a draft, and it planned a rebase plus
+`--force-with-lease`, while pyfixest's `git-and-pr-style.md` lets an agent rewrite history only with explicit approval.
+So I merged `master` instead (the repo squash-merges, so nothing was rewritten), moved the entry to a new 0.80.0 (In
+Development) section, re-ran my manifest's four checks (all passed, `test-py` 6764) and pushed `efbf3dc0`.
+Writing the playbook changed my number too: the five merged outside PRs got a first answer within 18 minutes to 2.6 days, but they were small fixes,
+and open outside feature PRs like #1885 and #2014 have waited weeks, so I set 7 days for my one nudge.
 
 ---
 
@@ -423,6 +431,24 @@ test checked that error, because the search used the full message and this test 
 supported". It now asserts that `fweights` still raise, committed as `c3e2ad77`. Lesson: search for the shortest
 distinctive part of a message, not the whole sentence.
 
+**2026-11-09 (the base moved: merge instead of rebase)**
+
+The PR monitor reported the PR as `CONFLICTING`. Upstream had merged 14 commits, including the 0.70.0 release
+(`829940fc`). They touched three of my five files, but `git merge-tree` showed only one conflict: `docs/changelog.qmd`,
+where my entry sat under 0.70.0, which had been restructured into release notes and shipped. `ritest.py` and
+`test_ritest.py` were unchanged upstream, and the `_closed_form_ols` attribute my guard uses still exists after
+0.70.0 removed most private attributes. The monitor drafted a rebase plus a force-push, but pyfixest's
+`git-and-pr-style.md` says an agent rewrites history only with explicit approval, so I merged `upstream/master`
+instead, taking its changelog, and moved the entry to a new `## PyFixest 0.80.0 (In Development)` section in its own
+commit. The version number is my guess from the pattern 0.50.0, 0.60.0, 0.70.0, and a maintainer may rename it.
+Before pushing I re-ran my manifest's first table: the changed-file lint passed, `tests/test_ritest.py` 97 passed,
+`ty` passed and `test-py` 6764 passed (3822 skipped, 7 xfailed, 17 min). The first try of the last three failed in
+seconds, and not because of the code: the shell still had another project's `VIRTUAL_ENV` active, so maturin refused
+to build pyfixest and `ty` read the wrong packages. They passed once it was unset. The build also bumped
+`pyfixest_core` in `Cargo.lock` to 0.70.0 (upstream's lockfile lags its `Cargo.toml`), and I restored it instead of
+committing it. The push was a plain fast-forward (`c3e2ad77..efbf3dc0`), and GitHub now reports the PR as
+`MERGEABLE`.
+
 **Toolkit**
 
 - Tool: Claude Code building on `feat/ritest-wls`, with git, pixi and the repo's pre-commit hooks (`prek`), and my
@@ -440,7 +466,8 @@ distinctive part of a message, not the whole sentence.
 ## Pull Request
 
 **PR Link:** https://github.com/py-econometrics/pyfixest/pull/2024 (draft, opened 2026-11-04 03:43 CST,
-`VincentTLe:feat/ritest-wls` into `master`, head c3e2ad77)
+`VincentTLe:feat/ritest-wls` into `master`, head c3e2ad77; head efbf3dc0 after `master` was merged in on
+2026-11-09)
 
 **PR Description:** It follows the repo's template (Summary, Verification) and opens with the before and after:
 `NotImplementedError` on `master`, `Pr(>|t|)=0.0050` on the branch, `Fixes #463`. It explains why removing the guard
@@ -456,7 +483,11 @@ the repo's rule for agent-authored work."
 
 **Maintainer Feedback:**
 
-- 2026-11-04: none yet (the PR is a few hours old).
+- 2026-11-04: none yet (the PR was a few hours old).
+- 2026-11-09: none yet, 5 days after opening: no comment, no review. Nothing to answer, but the branch needed work,
+  because 0.70.0 shipped on 2026-11-08 and GitHub marked the PR as conflicting. I merged `master`, moved my changelog
+  entry to 0.80.0 and pushed (Implementation Notes, 2026-11-09). My playbook's first nudge waits for 7 quiet days
+  (2026-11-11).
 
 **Status:** Awaiting review
 
@@ -484,22 +515,53 @@ the repo's rule for agent-authored work."
 
 **Technical Skills Gained**
 
-[What you learned technically, named concretely.]
+- Weighted least squares as ordinary least squares on data scaled by `sqrt(w)`, and why a fast path that reuses
+  precomputed matrices has to apply that scaling itself (`_run_ri` solved on `within_data`, which `fit_ols` never
+  scales).
+- Proving a numerical change without a trusted reference: make two independent algorithms agree on the same draws
+  (3.44e-15 after the fix, 0.28 before it), and write a test that fails without the fix (6 of 6) before trusting it.
+- Checking a reference before using it: reading R `ritest`'s source showed its draws ignore regression weights, and
+  emulating that in Python reproduced its p-values. That one finding decided my test plan.
+- Repo tooling on Windows: pixi environments and `--frozen` lockfiles, `core.autocrlf=input` against a `--fix=lf`
+  line-ending hook, running prek on changed files only, and Claude Code hooks that see the Bash tool but not
+  PowerShell until the matcher says so.
+- Keeping a PR current: the difference between merging the base into a branch and rebasing it, why a rebase needs a
+  force-push, and why a squash-merging repo makes the merge the safe choice.
 
 **Challenges Overcome**
 
-[What was hard and how you solved it; point at the real events, the
-Toolkit blocks above are full of them.]
+- The environment took longer than the code: pixi missing, `pixi install` rewriting `pixi.lock`, and R's `mvtnorm`
+  failing to compile with Fortran. Each had a narrow fix (winget, `git checkout pixi.lock` plus `--frozen`, prebuilt
+  conda-forge packages).
+- Five of nine weighted R reference cases failed against my branch. The tempting move was to change my code until it
+  matched R; reading R's source first showed that R was the one ignoring the weights, so I dropped the rows and
+  explained why in the PR.
+- My own claim that no test checked the old error was wrong, and `test-py` caught it
+  (`tests/test_errors.py::test_ritest_error`). I fixed the test in its own commit and changed how I search.
+- Every course hook assumed Claude Code's Bash tool, while on Windows it often runs PowerShell, so the voice guard and
+  the ship-gate would have let commands through unchecked. Both were patched and tested before anything was posted.
+- The base moved under my PR: 0.70.0 was released and my branch conflicted with `master`. The course plan said
+  rebase and force-push, the repo's rules say an agent may not rewrite history without explicit approval for it, so
+  I merged `master` instead.
 
 **What I'd Do Differently Next Time**
 
-[Reflection on your process.]
+- Spread the work out. I claimed #463 on 2026-10-27 and did the reproduction, plan, fix, tests and PR in one night
+  (2026-11-04), so the report was a day late and every hard problem hit at once. Next time the environment and the
+  reproduction start the day after the claim.
+- Write the repo memory (`CLAUDE.local.md`) first. Mine was written last, after the sessions that needed it.
+- Before planning tests against a reference implementation, check that it supports the feature at all.
+- Measure the repo's rhythm before opening, including open PRs and not only merged ones, so a quiet week is
+  expected rather than worrying.
+- Walk through my own diff line by line before opening the PR, so I can answer a reviewer about `_run_ri` without
+  help. Claude Code drafted most of the code, and I'm the one who answers for it.
 
 ---
 
 ## Resources Used
 
-- pyfixest `docs/developer/git-and-pr-style.md`: the draft-PR rule for agent work, branch and commit names.
+- pyfixest `docs/developer/git-and-pr-style.md`: the draft-PR rule for agent work, branch and commit names, and the
+  rule that an agent rewrites history only with explicit approval, which made me merge `master` instead of rebasing.
 - pyfixest `docs/developer/testing.md`: the selection matrix that set my manifest, and how to report checks.
 - The `fit_ols` docstring in `pyfixest/estimation/internals/fit_.py` ("Demeaned but not WLS-transformed"), which
   explained the fast-path bug.
@@ -507,3 +569,10 @@ Toolkit blocks above are full of them.]
 - The maintainer's to-do list in https://github.com/py-econometrics/pyfixest/issues/463, and draft PR
   https://github.com/py-econometrics/pyfixest/pull/2014 for the overlap.
 - `.pre-commit-config.yaml` (`mixed-line-ending` with `--fix=lf`), which explained the first ship-gate stop.
+- Five merged PRs from outside contributors, which set my playbook's staleness threshold:
+  https://github.com/py-econometrics/pyfixest/pull/2025, https://github.com/py-econometrics/pyfixest/pull/1935,
+  https://github.com/py-econometrics/pyfixest/pull/1884, https://github.com/py-econometrics/pyfixest/pull/1829 and
+  https://github.com/py-econometrics/pyfixest/pull/1713.
+- pyfixest commit e3d3a925 ("update changelog", #1353), which showed how the maintainer opens the next version's
+  section, "0.70.0 (In Development)", the form I used for 0.80.0.
+- The Unit 8 monitor's `INSTALL.md` (sections 2 and 6) for reading `CONFLICTING` and `DIRTY`, and the rebase steps.
