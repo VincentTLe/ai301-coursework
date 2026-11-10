@@ -105,8 +105,13 @@ and open outside feature PRs like #1885 and #2014 have waited weeks, so I set 7 
 
 ## Why I Chose This Issue
 
-On 2026-10-26 I gave my scout three issues directly: hackclub/nephthys#104, scikit-hep/pyhf#783 and
-py-econometrics/pyfixest#463. It accepted all three and ranked #463 last. It called #463 "ambitious", because it needs
+The three candidates came from the course's Issue Selection site on 2026-10-21. A Claude Code session in Chrome went
+through its 2,338 Python issues: it dropped frontend, docs and hardware ones (779 left), kept the 234 that match my
+fit profile's keywords, then the 64 with no assignee, no PR and no comment that looks like a claim, and rejected the
+good-looking ones already taken (all 7 openalgo issues and marimo#11176, among others, had open PRs). The LLM and
+backend part of the pool was mostly taken, so the best fits left were hackclub/nephthys#104, scikit-hep/pyhf#783 and
+py-econometrics/pyfixest#463, and on 2026-10-26 I gave those three URLs to my scout directly. It accepted all three
+and ranked #463 last. It called #463 "ambitious", because it needs
 econometrics knowledge and an R setup for the comparison tests, which is the furthest from my fit profile. It also
 gave two leads that turned out to matter: the functions the issue links had moved to
 `pyfixest/estimation/post_estimation/ritest.py`, and the repo's AGENTS.md says never to return numbers for an
@@ -472,7 +477,7 @@ committing it. The push was a plain fast-forward (`c3e2ad77..efbf3dc0`), and Git
 **PR Description:** It follows the repo's template (Summary, Verification) and opens with the before and after:
 `NotImplementedError` on `master`, `Pr(>|t|)=0.0050` on the branch, `Fixes #463`. It explains why removing the guard
 wasn't enough (fast draws off by up to 0.28), lists the five changes (`_run_ri` scaling, the narrowed guard, two new
-tests, the updated error test, the changelog), and says what still raises (`fweights`, weighted `fepois`/`feglm`).
+tests, the updated error test, the changelog, now under 0.80.0 since the 2026-11-09 edit), and says what still raises (`fweights`, weighted `fepois`/`feglm`).
 It reports that R's `ritest` ignores weights in its draws, with the four emulated p-values, so there are no weighted R
 rows, and offers a weighted `fixest::feols` permutation loop as a reference if the maintainers want one. It names
 draft #2014 and promises a rebase if that lands first. Verification: `tests/test_ritest.py` 97 passed, `test-py`
